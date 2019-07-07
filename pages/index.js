@@ -1,5 +1,7 @@
 import Layout from '../components/Layout'
 
+
+
 const Index = () => (
     <div>
       <p>Hello Next.js</p>

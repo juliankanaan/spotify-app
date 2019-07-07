@@ -17,6 +17,7 @@
     "dotenv": "^8.0.0",
     "next": "^8.1.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "spotify-web-api-node": "^4.0.0"
   }
 }
