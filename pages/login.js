@@ -1,27 +1,38 @@
 // page to login a user 
+import react, {useEffect, useState} from 'react'
 import Link from 'next/link';
+import fetch from 'node-fetch'
 
-const Spotify = require('spotify-web-api-node')
-const spotify = new Spotify({
-  clientId: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
-  redirectUri: 'https://localhost:3000/player'
-});
-// required scopes 
-const scopes = ['streaming', 'user-read-email', 'user-modify-playback-state', 'user-read-playback-state']
-const spotifyState = ''
-// build auth URL 
-const authURL = spotify.createAuthorizeURL(scopes)
-console.log(authURL);
+var Spotify = require('spotify-web-api-js');
+const spotify = new Spotify();
+// retrieve authURL from backend
+const host = 'https://obscure-scrubland-51083.herokuapp.com/' 
 
 
-const Login = () => (
-    <div>
-      <p>Auth page</p>
-      <Link href={authURL}>
-        <a>Login</a>
-      </Link>
-    </div>
-  );
+const Login = () => {
+    const [authURL, setAuthURL] = useState('')
+    useEffect(() => {
+      const getUrl = () => {
+        fetch(`${host}api/login`)
+          .then(response => response.text())
+          .then(data => {
+            setAuthURL(data)
+            console.log(data)
+          })
+          .catch(err => console.log(err))
+      }
+      getUrl()
+    }, [])
+
+
+    return (
+          <div>
+            <p>Auth page</p>
+            <Link href={authURL}>
+            <a>Login</a>
+            </Link>
+          </div>
+          )
+};
   
   export default Login;
