@@ -16,23 +16,24 @@ const host = 'https://obscure-scrubland-51083.herokuapp.com/'
 const Player = withRouter(props => {
 
     const [user, setUser] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [code, setCode] = useState(null)
+    const [token, setToken] = useState(null)
 
     useEffect(() => {
         // url param from spotify 
-        const code = props.router.query.code || null
+        
         const fetchToken = () => {
+                    const code = props.router.query.code || null
                     fetch(`${host}api/capture?code=${code}`)
                         .then(response => response.json())
                         .then(data => {
-                            console.log(data)
                             // set cookies 
                             const inOneHour = 1/24
                             Cookies.set('access_token', data.credentials.access_token , {
                                 expires: inOneHour
                             })
-                            Cookies.set('refresh_token', data.credentials.access_token)
+                            Cookies.set('refresh_token', data.credentials.refresh_token)
+                            setToken(data.credentials.access_token)
+
                         })
                         .catch(err => console.log(err))
         }
@@ -56,46 +57,42 @@ const Player = withRouter(props => {
                     Cookies.set('access_token', data.credentials.access_token , {
                         expires: inOneHour
                     })
-                    Cookies.set('refresh_token', data.credentials.access_token)
-                    Router.push('/login')
+                    Cookies.set('refresh_token', data.credentials.refresh_token)
+                    setToken(data.credentials.access_token)
+
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.error(err))
         
         }
-        const isLoggedIn = () => {
-            if (Cookies.get('access_token')) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-       
         // accessToken exists?
-        if (isLoggedIn()) {
+        if (Cookies.get('access_token')) {
             spotify.setAccessToken(Cookies.get('access_token'))
             fetchUser()
         
         // token expired? Get a new one
         } else if (Cookies.get('refresh_token')) {
             refreshToken(); 
-
-        // user logging in for first time 
-        } else if (code && !Cookies.get('refresh_token')) {
+            fetchUser()
+        // no credentials? Push to login page 
+        }  else if (props.router.query.code) {
             fetchToken()
-        }  else {
+            fetchUser()
+        } else {
             Router.push('/login')
         }
+         
     }, []); // useEffect 
     
     return (
         <>
-       
+            {Cookies.get('access_token') &&
             <Layout>
                 <div className='player'>
                     <UserDetails displayName={user.display_name} userId={user.id} />
                     <PlayModule accessToken={Cookies.get('access_token')} />
                 </div>
             </Layout>
+            }
         </>
     );
 })

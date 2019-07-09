@@ -1,3 +1,28 @@
 .main {
     padding: 20px;
 }
+.play_module {
+    box-shadow: rgba(0, 0, 0, 0.17) 10px 10px 20px;
+    border-radius: 40px;
+    padding: 30px;
+    background-color: white;
+}
+.artist-info {
+    text-align: center;
+}
+.user-details {
+    color: white;
+}
+.artist-info img {
+    border-radius: 50%;
+    width: 150px;
+    padding: 15px;
+}
+.artist-info h4 {
+    font-weight: 200
+}
+.controls {
+    display: flex;
+    justify-content: space-around;
+    padding: 30px;
+}
