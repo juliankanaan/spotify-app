@@ -16,7 +16,9 @@ const host = 'https://obscure-scrubland-51083.herokuapp.com/'
 const Player = withRouter(props => {
 
     const [user, setUser] = useState([])
-    const [token, setToken] = useState(null)
+    const [accessToken, setAccessToken] = useState(null)
+    const [refreshToken, setRefreshToken]  = useState(null)
+    const [ready, setReady] = useState(false)
 
     useEffect(() => {
         // url param from spotify 
@@ -32,14 +34,18 @@ const Player = withRouter(props => {
                                 expires: inOneHour
                             })
                             Cookies.set('refresh_token', data.credentials.refresh_token)
-                            setToken(data.credentials.access_token)
+                            setAccessToken(data.credentials.access_token)
+                            setRefreshToken(data.credentials.refresh_token)
 
                         })
                         .catch(err => console.log(err))
         }
         const fetchUser = () => {
             spotify.getMe()
-                        .then(response => setUser(response))
+                        .then(response => {
+                            setUser(response)
+                            setReady(true)
+                        })
                         //.then(data => console.log(data))
                         .catch(err => console.log(err))
         }
@@ -58,12 +64,14 @@ const Player = withRouter(props => {
                         expires: inOneHour
                     })
                     Cookies.set('refresh_token', data.credentials.refresh_token)
-                    setToken(data.credentials.access_token)
+                    setAccessToken(data.credentials.access_token)
+                    setRefreshToken(data.credentials.refresh_token)
 
                 })
                 .catch(err => console.error(err))
         
         }
+
         // accessToken exists?
         if (Cookies.get('access_token')) {
             spotify.setAccessToken(Cookies.get('access_token'))
@@ -81,11 +89,11 @@ const Player = withRouter(props => {
             Router.push('/login')
         }
          
-    }, []); // useEffect 
+    }, [ready, user]); // useEffect 
     
     return (
         <>
-            {Cookies.get('access_token') &&
+            {ready && 
             <Layout>
                 <div className='player'>
                     <UserDetails displayName={user.display_name} userId={user.id} />

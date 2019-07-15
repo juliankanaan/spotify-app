@@ -6,6 +6,8 @@
     border-radius: 40px;
     padding: 30px;
     background-color: white;
+    max-width: 440px;
+    margin: auto;
 }
 .artist-info {
     text-align: center;

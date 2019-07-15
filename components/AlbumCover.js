@@ -29,7 +29,7 @@ const AlbumCover = props => {
                     document.body.style.backgroundColor = color.hex 
                 })
                 .catch( e => console.log(e))
-    }); 
+    }, [props.src]); 
        
 
     return (
