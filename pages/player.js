@@ -89,7 +89,7 @@ const Player = withRouter(props => {
             Router.push('/login')
         }
          
-    }, [ready, user]); // useEffect 
+    }, []); // useEffect 
     
     return (
         <>

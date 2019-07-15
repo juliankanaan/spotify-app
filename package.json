@@ -23,6 +23,7 @@
     "node-fetch": "^2.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-player-controls": "^1.1.0",
     "spotify-web-api-js": "^1.2.0",
     "spotify-web-api-node": "^4.0.0",
     "styled-components": "^4.3.2"

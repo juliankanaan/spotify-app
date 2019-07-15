@@ -2,7 +2,10 @@ import React, {Component} from 'react'
 import Cookies from 'js-cookie'
 import AlbumCover from '../components/AlbumCover'
 
+import VolumeSlider from '../components/VolumeSlider'
+
 import SpotifyWebApi from 'spotify-web-api-js'
+import { throws } from 'assert';
 const spotify = new SpotifyWebApi();
 
 class PlayModule extends Component {
@@ -14,7 +17,7 @@ class PlayModule extends Component {
             playerReady: false,
             nowPlaying: {trackName: '', trackid: '', artists: [], albumName: '', albumImgSrc: ''},
             deviceId: '',
-            playerStatus: {playing: null, position: null, duration: null},
+            playerStatus: {playing: null, position: null, duration: null,  volume: 1},
             error: {status: false, message: null}
         }
     }
@@ -100,7 +103,7 @@ class PlayModule extends Component {
                 playerStatus: {
                     duration,
                     position,
-                    playing
+                    playing,
                 },
                 nowPlaying: {
                     trackName,
@@ -148,6 +151,7 @@ class PlayModule extends Component {
           await this.setState({ deviceId: device_id });
           this.transferPlaybackHere();
           this.setState({playerReady: true})
+
         });
       }
     togglePlay(){
@@ -161,6 +165,12 @@ class PlayModule extends Component {
     }
     back(){
         this.player.previousTrack()
+    }
+    changeVolume(v){
+        this.player.setVolume(v)
+            .then(() => {
+                this.setState({playerStatus: {volume: v}})
+            })
     }
 
     render() {
@@ -182,6 +192,12 @@ class PlayModule extends Component {
                     <button className='btn btn-secondary' onClick={()=> this.back()}>Prev</button>
                     <button className='btn btn-secondary' onClick={()=> this.togglePlay()}>{playing ? ("Pause" ): ("Play")}</button>
                     <button className='btn btn-secondary' onClick={()=> this.forwards()}>Next</button>
+                </div>
+                <div className='controls'>
+                    <VolumeSlider isEnabled
+                         direction='HORIZONTAL'
+                         value={this.state.playerStatus.volume}
+                         onChange={v => this.changeVolume(v)}  />
                 </div>
                 
             </div>
