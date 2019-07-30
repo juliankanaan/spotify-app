@@ -15,7 +15,7 @@ class PlayModule extends Component {
         spotify.setAccessToken(token)
         this.state = {
             playerReady: false,
-            nowPlaying: {trackName: '', trackid: '', artists: [], albumName: '', albumImgSrc: ''},
+            nowPlaying: {trackName: '', trackid: '', artists: [], albumName: '', albumImgSrc: '', tempo: ''},
             deviceId: '',
             playerStatus: {playing: null, position: null, duration: null,  volume: 1},
             error: {status: false, message: null}
@@ -79,7 +79,11 @@ class PlayModule extends Component {
                 }
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                //this.setState({nowPlaying: {tempo: data.tempo}})   
+                console.log(data.tempo)
+                
+            })
             .catch(e => console.error(e))
         }
     }
